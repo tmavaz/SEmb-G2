@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
+#include <stdbool.h>
+#include <math.h>
+
+#include "driverlib/gpio.h"
+#include "driverlib/sysctl.h"
+#include "driverlib/pin_map.h"
+#include "driverlib/i2c.h"
+#include "driverlib/uart.h"
+
+#include "inc/hw_i2c.h"
+#include "inc/hw_memmap.h"
+
+//biblioteca retirada do exemplo do professor
+#include "LCD.h"
+
+//bibliotecas criadas por nós
+#include "keyboard.h"
+#include "lcd1.h"
+#include "buzzer.h"
+#include "UART.h"
+#include "I2C.h"
+
+
+void intInit(void);
+void reverse(char* str, int len);
+int intToStr(int x, char str[], int d);
+void ftoa(float n, char* res, int afterpoint);
+//int main2(void);
+
