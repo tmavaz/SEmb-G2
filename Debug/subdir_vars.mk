@@ -17,7 +17,6 @@ C_SRCS += \
 ../freertos_demo.c \
 ../keyboard.c \
 ../lcd1.c \
-../led_task.c \
 ../startup_ccs.c \
 ../switch_task.c 
 
@@ -30,7 +29,6 @@ C_DEPS += \
 ./freertos_demo.d \
 ./keyboard.d \
 ./lcd1.d \
-./led_task.d \
 ./startup_ccs.d \
 ./switch_task.d 
 
@@ -43,7 +41,6 @@ OBJS += \
 ./freertos_demo.obj \
 ./keyboard.obj \
 ./lcd1.obj \
-./led_task.obj \
 ./startup_ccs.obj \
 ./switch_task.obj 
 
@@ -56,7 +53,6 @@ OBJS__QUOTED += \
 "freertos_demo.obj" \
 "keyboard.obj" \
 "lcd1.obj" \
-"led_task.obj" \
 "startup_ccs.obj" \
 "switch_task.obj" 
 
@@ -69,7 +65,6 @@ C_DEPS__QUOTED += \
 "freertos_demo.d" \
 "keyboard.d" \
 "lcd1.d" \
-"led_task.d" \
 "startup_ccs.d" \
 "switch_task.d" 
 
@@ -82,7 +77,6 @@ C_SRCS__QUOTED += \
 "../freertos_demo.c" \
 "../keyboard.c" \
 "../lcd1.c" \
-"../led_task.c" \
 "../startup_ccs.c" \
 "../switch_task.c" 
 

@@ -14,9 +14,9 @@ freertos_demo.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/pin_map.h
 freertos_demo.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/rom.h
 freertos_demo.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/sysctl.h
 freertos_demo.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/uart.h
+freertos_demo.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/interrupt.h
 freertos_demo.obj: C:/ti/tivaware_c_series_2_1_4_178/utils/uartstdio.h
 freertos_demo.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdarg.h
-freertos_demo.obj: ../led_task.h
 freertos_demo.obj: ../switch_task.h
 freertos_demo.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/FreeRTOS.h
 freertos_demo.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stddef.h
@@ -121,11 +121,11 @@ C:/ti/tivaware_c_series_2_1_4_178/driverlib/sysctl.h:
 
 C:/ti/tivaware_c_series_2_1_4_178/driverlib/uart.h:
 
+C:/ti/tivaware_c_series_2_1_4_178/driverlib/interrupt.h:
+
 C:/ti/tivaware_c_series_2_1_4_178/utils/uartstdio.h:
 
 C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdarg.h:
-
-../led_task.h:
 
 ../switch_task.h:
 

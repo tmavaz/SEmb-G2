@@ -6,7 +6,6 @@
 "./freertos_demo.obj"
 "./keyboard.obj"
 "./lcd1.obj"
-"./led_task.obj"
 "./startup_ccs.obj"
 "./switch_task.obj"
 "./drivers/buttons.obj"

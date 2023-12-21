@@ -31,8 +31,8 @@
 #include "driverlib/rom.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/uart.h"
+#include "driverlib/interrupt.h"
 #include "utils/uartstdio.h"
-#include "led_task.h"
 #include "switch_task.h"
 #include "FreeRTOS.h"
 #include "task.h"
@@ -45,14 +45,19 @@
 #define TEMP_QUEUE_LENGTH 1
 // Define o tamanho da queue buzzer
 #define BUZZER_QUEUE_LENGTH 20
-// Define o tamanho dos itens na queue
+// Define o tamanho da queue uart
+#define UART_QUEUE_LENGTH 20
+// Define o tamanho dos itens na queue temp
 #define ITEM_SIZE sizeof(float)
 // Define um threshold para o sensor de temperatura
 #define TEMP_THRESHOLD 30
+// Define o tamanho dos itens na queue uart
+#define UART_SIZE 100*sizeof(char)
 
 // Declaração da queue para guardar os valores da temperatura
 QueueHandle_t temp_queue;
 QueueHandle_t buzzer_queue;
+QueueHandle_t uart_queue;
 //*****************************************************************************
 //
 // The error routine that is called if the driver library encounters an error.
@@ -92,7 +97,7 @@ void keyboardTask()
         if(key_pressed == '1'){
             taskENTER_CRITICAL();
             Lcd_Clear();
-            Lcd_Write_String("Bem vindo Rocha! ;)");
+            Lcd_Write_String("Bem vindo! ;)");
             taskEXIT_CRITICAL();
         }
         if(key_pressed == '2')  //temperatura
@@ -115,6 +120,7 @@ void keyboardTask()
        if(key_pressed == '3')  //Temperatura
        {
            taskENTER_CRITICAL();
+           Lcd_Clear();
            Lcd_Write_Char('3');
            taskEXIT_CRITICAL();
        }
@@ -136,6 +142,9 @@ void keyboardTask()
  */
 
 /*void keyboard_int_handler(void) {
+    BaseType_t xHigherPriorityTaskWoken;
+    xHigherPriorityTaskWoken = pdFALSE;
+
     // Desativa a flag da interrupção
     GPIOIntClear(GPIO_PORTC_BASE, GPIO_INT_PIN_7 | GPIO_INT_PIN_6 | GPIO_INT_PIN_5 | GPIO_INT_PIN_4);
 
@@ -150,7 +159,7 @@ void keyboardTask()
 
     if(key_pressed == '1'){
             Lcd_Clear();
-            Lcd_Write_String("Bem vindo Rocha! ;)");
+            Lcd_Write_String("Bem vindo! ;)");
     }
     if(key_pressed == '2')  //temperatura
     {
@@ -161,7 +170,7 @@ void keyboardTask()
 
         if(receivedData > TEMP_THRESHOLD)
         {
-            xQueueSendFromISR(buzzer_queue, 3, portMAX_DELAY);
+            xQueueSendFromISR(buzzer_queue, 3, &xHigherPriorityTaskWoken);
         }
         Lcd_Clear();
         Lcd_Write_String("Temperatura: ");
@@ -173,7 +182,7 @@ void keyboardTask()
    }
    if(key_pressed == '4')   //Tocar o buzzer
    {
-       xQueueSendFromISR(buzzer_queue, 2, portMAX_DELAY);
+       xQueueSendFromISR(buzzer_queue, 2, &xHigherPriorityTaskWoken);
    }
    if(key_pressed == 'C')  //temperatura
    {
@@ -241,6 +250,11 @@ void buzzerTask()
     }
 }
 
+void uartTask()
+{
+
+}
+
 //*****************************************************************************
 //
 // Initialize FreeRTOS and start the initial set of tasks.
@@ -262,15 +276,17 @@ main(void)
     Lcd_Write_Char('H');
 
     ////////////////////////////////////////////////////////////////////////////////////
-    BaseType_t xkeyboardTask, xtempTask, xbuzzerTask;
+    BaseType_t xkeyboardTask, xtempTask, xbuzzerTask, xuartTask;
 
     // Inicialização da temp_queue
     temp_queue = xQueueCreate(TEMP_QUEUE_LENGTH, ITEM_SIZE);
     // Inicialização do buzzer_queue
     buzzer_queue = xQueueCreate(BUZZER_QUEUE_LENGTH, ITEM_SIZE);
+    // Inicialização do buzzer_queue
+    uart_queue = xQueueCreate(UART_QUEUE_LENGTH, UART_SIZE);
 
     // Verificação temp_queue e buzzer_queue
-    if(temp_queue == NULL || buzzer_queue == NULL)
+    if(temp_queue == NULL || buzzer_queue == NULL || uart_queue == NULL)
     {
         printf("Erro na criacao da queue.");
     }
@@ -279,10 +295,10 @@ main(void)
     xkeyboardTask = xTaskCreate(keyboardTask, "Keyboard", 200, NULL, 1, NULL);
     xtempTask = xTaskCreate(tempTask, "Temperature", 200, NULL, 1, NULL);
     xbuzzerTask = xTaskCreate(buzzerTask, "Buzzer", 200, NULL, 1, NULL);
+    xuartTask = xTaskCreate(uartTask, "UART", 200, NULL, 2, NULL);
 
     // Verficação da criação das tasks
-    if(xkeyboardTask != pdPASS || xtempTask != pdPASS || xbuzzerTask != pdPASS)
-    //if(xtempTask != pdPASS || xbuzzerTask != pdPASS)
+    if(xkeyboardTask != pdPASS || xtempTask != pdPASS || xbuzzerTask != pdPASS || xuartTask != pdPASS   )
     {
         printf("Erro na criacao da task");
     }

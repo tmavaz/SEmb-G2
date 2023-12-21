@@ -51,7 +51,7 @@ void UART_receive()
 
         // Armazena o caracter no buffer
         buffer[i++] = receivedChar;
-        Lcd_Write_Char(receivedChar);
+        //Lcd_Write_Char(receivedChar);
         //return buffer;
     }
 
