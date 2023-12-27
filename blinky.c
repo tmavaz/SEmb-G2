@@ -47,6 +47,7 @@ int intToStr(int x, char str[], int d){
     return i;
 }
 
+// Conversão float para string
 void ftoa(float n, char* res, int afterpoint){
     // Extract integer part
     int ipart = (int)n;
@@ -69,6 +70,8 @@ void ftoa(float n, char* res, int afterpoint){
         intToStr((int)fpart, res + i + 1, afterpoint);
     }
 }
+
+// Conversão string para float
 
 /*int main2(void){
 

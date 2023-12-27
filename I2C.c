@@ -22,49 +22,56 @@ void I2CSend(uint8_t slave_addr) {
 
     // Envia os bytes de dados
     I2CMasterDataPut(I2C2_BASE, 0x01);
-    I2CMasterDataPut(I2C2_BASE, 0x60);
-
     // Inicia a transferência
-    I2CMasterControl(I2C2_BASE, I2C_MASTER_CMD_SINGLE_SEND);
+    I2CMasterControl(I2C2_BASE, I2C_MASTER_CMD_BURST_SEND_START);
+    while(I2CMasterBusy(I2C2_BASE)){}
+
+    I2CMasterDataPut(I2C2_BASE, 0x60);
+    I2CMasterControl(I2C2_BASE, I2C_MASTER_CMD_BURST_SEND_CONT);
+    while(I2CMasterBusy(I2C2_BASE)){}
+
+
 
     // Aguarda a conclusão da transferência
-    while (I2CMasterBusBusy(I2C2_BASE)) {}
+    //while (I2CMasterBusBusy(I2C2_BASE)) {}
 }
 
 float I2CReceiveTemp(uint8_t slave_addr) {
 
-    uint16_t temperature;
+    uint16_t tempH,tempL;
     float cTemp;
 
     // Escreve o endereço do escravo no barramento para leitura
     I2CMasterSlaveAddrSet(I2C2_BASE, slave_addr, true);
 
     // Inicia a leitura de um byte de dados
-    I2CMasterControl(I2C2_BASE, I2C_MASTER_CMD_SINGLE_RECEIVE);
+    I2CMasterControl(I2C2_BASE, I2C_MASTER_CMD_BURST_RECEIVE_START);
 
     // Aguarda a conclusão da leitura
     while (I2CMasterBusy(I2C2_BASE)) {}
 
     // Retorna o byte recebido
-    temperature = I2CMasterDataGet(I2C2_BASE)<<8;
+    tempH = I2CMasterDataGet(I2C2_BASE);
+
+    I2CMasterControl(I2C2_BASE, I2C_MASTER_CMD_BURST_RECEIVE_FINISH);
 
     while (I2CMasterBusy(I2C2_BASE)) {}
 
-    temperature |= I2CMasterDataGet(I2C2_BASE);
-
-    cTemp = conversao(temperature);
-
+    tempL = I2CMasterDataGet(I2C2_BASE);
     //temperature = temperature>>4;
+
+    cTemp = conversao((tempH<<8) | tempL);
+
 
     return cTemp;
 }
 
 float conversao(uint16_t temperature) {
 
-    int temp = (temperature) / 16;
-    if(temp > 2047){
+    float cTemp = (temperature) / 256.0;
+    /*if(temp > 2047){
       temp -= 4096;
-    }
-    float cTemp = temp * 0.0625;
+    }*/
+    //float cTemp = temp * 0.0625;
     return cTemp;
 }

@@ -17,10 +17,9 @@ freertos_demo.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/uart.h
 freertos_demo.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/interrupt.h
 freertos_demo.obj: C:/ti/tivaware_c_series_2_1_4_178/utils/uartstdio.h
 freertos_demo.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdarg.h
-freertos_demo.obj: ../switch_task.h
 freertos_demo.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/FreeRTOS.h
 freertos_demo.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stddef.h
-freertos_demo.obj: C:/Users/franc/Downloads/blinky\ (1)/freertos_demo/FreeRTOSConfig.h
+freertos_demo.obj: C:/Users/franc/Downloads/blinky\ (1)/GroundStation/FreeRTOSConfig.h
 freertos_demo.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/projdefs.h
 freertos_demo.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/portable.h
 freertos_demo.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/deprecated_definitions.h
@@ -127,13 +126,11 @@ C:/ti/tivaware_c_series_2_1_4_178/utils/uartstdio.h:
 
 C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdarg.h:
 
-../switch_task.h:
-
 C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/FreeRTOS.h:
 
 C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stddef.h:
 
-C:/Users/franc/Downloads/blinky\ (1)/freertos_demo/FreeRTOSConfig.h:
+C:/Users/franc/Downloads/blinky\ (1)/GroundStation/FreeRTOSConfig.h:
 
 C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/projdefs.h:
 
