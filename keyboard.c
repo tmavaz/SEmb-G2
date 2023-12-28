@@ -11,12 +11,10 @@ void keyboard_init()
     while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOB)){}
     GPIOPinTypeGPIOOutput(GPIO_PORTB_BASE, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3);
 
-
     //Inicialização dos pinos de input [X]
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOC);
     while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOC)){}
     GPIOPinTypeGPIOInput(GPIO_PORTC_BASE, GPIO_PIN_7 | GPIO_PIN_6 | GPIO_PIN_5 | GPIO_PIN_4);
-
 }
 
 

@@ -4,6 +4,7 @@
 "./UART.obj"
 "./blinky.obj"
 "./buzzer.obj"
+"./date.obj"
 "./keyboard.obj"
 "./lcd1.obj"
 "./startup_ccs.obj"

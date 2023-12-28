@@ -12,7 +12,8 @@
 void Lcd_Port(char a);
 void Lcd_Cmd(char a);
 void Lcd_Clear(void);
-void Lcd_Set_Cursor(int pos);
+//void Lcd_Set_Cursor(int pos);
+void Lcd_Set_Cursor(char a, char b);
 void Lcd_Init(void);
 void Lcd_Write_Char(char a);
 void Lcd_Write_String(const char *a);

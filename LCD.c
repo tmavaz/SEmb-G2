@@ -61,7 +61,7 @@ void Lcd_Clear(void)
 *
 * Description: Sets the LCD cursor position
 **************************************************************/
-/*void Lcd_Set_Cursor(char a, char b)
+void Lcd_Set_Cursor(char a, char b)
 {
 char temp,z,y;
 if(a == 1)
@@ -81,13 +81,13 @@ y = temp & 0x0F;
 Lcd_Cmd(z);
 Lcd_Cmd(y);
 }
-}*/
+}
 
-void Lcd_Set_Cursor(int pos)
+/*void Lcd_Set_Cursor(int pos)
 {
     pos |= 0x80;
     Lcd_Cmd(pos);
-}
+}*/
 
 /**************************************************************
 * Function: void Lcd_Init()
@@ -201,8 +201,7 @@ Lcd_Write_String(itoa(buf, v, 10));
 void Lcd_Write_Float(float f)
 {
 char* buf11;
-int status;
-buf11 = ftoa(f, &status);
+ftoa(f, buf11, 0);
 Lcd_Write_String(buf11);
 }
 

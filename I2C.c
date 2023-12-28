@@ -30,8 +30,6 @@ void I2CSend(uint8_t slave_addr) {
     I2CMasterControl(I2C2_BASE, I2C_MASTER_CMD_BURST_SEND_CONT);
     while(I2CMasterBusy(I2C2_BASE)){}
 
-
-
     // Aguarda a conclusão da transferência
     //while (I2CMasterBusBusy(I2C2_BASE)) {}
 }
@@ -62,12 +60,10 @@ float I2CReceiveTemp(uint8_t slave_addr) {
 
     cTemp = conversao((tempH<<8) | tempL);
 
-
     return cTemp;
 }
 
 float conversao(uint16_t temperature) {
-
     float cTemp = (temperature) / 256.0;
     /*if(temp > 2047){
       temp -= 4096;

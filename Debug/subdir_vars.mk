@@ -15,6 +15,7 @@ C_SRCS += \
 ../UART.c \
 ../blinky.c \
 ../buzzer.c \
+../date.c \
 ../keyboard.c \
 ../lcd1.c \
 ../startup_ccs.c 
@@ -26,6 +27,7 @@ C_DEPS += \
 ./UART.d \
 ./blinky.d \
 ./buzzer.d \
+./date.d \
 ./keyboard.d \
 ./lcd1.d \
 ./startup_ccs.d 
@@ -37,6 +39,7 @@ OBJS += \
 ./UART.obj \
 ./blinky.obj \
 ./buzzer.obj \
+./date.obj \
 ./keyboard.obj \
 ./lcd1.obj \
 ./startup_ccs.obj 
@@ -48,6 +51,7 @@ OBJS__QUOTED += \
 "UART.obj" \
 "blinky.obj" \
 "buzzer.obj" \
+"date.obj" \
 "keyboard.obj" \
 "lcd1.obj" \
 "startup_ccs.obj" 
@@ -59,6 +63,7 @@ C_DEPS__QUOTED += \
 "UART.d" \
 "blinky.d" \
 "buzzer.d" \
+"date.d" \
 "keyboard.d" \
 "lcd1.d" \
 "startup_ccs.d" 
@@ -70,6 +75,7 @@ C_SRCS__QUOTED += \
 "../UART.c" \
 "../blinky.c" \
 "../buzzer.c" \
+"../date.c" \
 "../keyboard.c" \
 "../lcd1.c" \
 "../startup_ccs.c" 

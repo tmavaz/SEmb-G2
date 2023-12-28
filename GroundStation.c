@@ -41,6 +41,7 @@
 #include "semphr.h"
 #include "keyboard.h"
 #include "blinky.h"
+#include "date.h"
 
 // Define o tamanho da queue temp
 #define TEMP_QUEUE_LENGTH 1
@@ -219,7 +220,12 @@ void keyboardTask()
     char buffer[50];
     int i;
     char key_pressed_previous = 'G';
-    float parameter;
+    char stringmes[3];
+    char stringdia[3];
+    char stringano[5];
+    char stringhora[3];
+    char stringminuto[3];
+    char stringsegundo[3];
 
     while (1)
     {
@@ -329,11 +335,10 @@ void keyboardTask()
             {
                 //Recebe dados da fila
                 sucessfulReceived = xQueueReceive(uart_queue, &buffer, 100);
-                packet_division(&buffer, PACKET_NUMBER);
 
                 if (sucessfulReceived == pdTRUE)
                 {
-                    packet_division(&buffer, 1);
+                    packet_division(&buffer, PACKET_NUMBER);
                     taskENTER_CRITICAL();
                     Lcd_Clear();
                     for (i = 0; i < 20; i++)
@@ -348,10 +353,34 @@ void keyboardTask()
                     taskEXIT_CRITICAL();
                 }
             }
-            if (key_pressed == 'B')   //Tocar o buzzer
+            if (key_pressed == 'D')  //Data
+            {
+                ftoa(date.mes, stringmes, 0);
+                ftoa(date.dia, stringdia, 0);
+                ftoa(date.ano, stringano, 0);
+                ftoa(date.hora, stringhora, 0);
+                ftoa(date.minuto, stringminuto, 0);
+                ftoa(date.segundo, stringsegundo, 0);
+
+                taskENTER_CRITICAL();
+                Lcd_Clear();
+                Lcd_Write_String(stringmes);
+                Lcd_Write_String("-");
+                Lcd_Write_String(stringdia);
+                Lcd_Write_String("-");
+                Lcd_Write_String(stringano);
+                Lcd_Write_String(" ");
+                Lcd_Write_String(stringhora);
+                Lcd_Write_String(":");
+                Lcd_Write_String(stringminuto);
+                Lcd_Write_String(":");
+                Lcd_Write_String(stringsegundo);
+                taskEXIT_CRITICAL();
+            }
+            /*if (key_pressed == 'B')   //Tocar o buzzer
             {
                 xQueueSend(buzzer_queue, 2, portMAX_DELAY);
-            }
+            }*/
             if (key_pressed == 'C')  //Clear
             {
                 taskENTER_CRITICAL();
@@ -452,7 +481,6 @@ void uartTask()
                 //return buffer;
             }
         }
-
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
@@ -470,11 +498,11 @@ int main(void)
     Lcd_Init();
     UART_init();
     keyboard_init();
-    //keyboard_int_init();
-    //IntMasterEnable();
 
     Lcd_Clear();
-    Lcd_Write_Char('H');
+
+    date_init();
+    timer_init();
 
     ////////////////////////////////////////////////////////////////////////////////////
     BaseType_t xkeyboardTask, xtempTask, xbuzzerTask, xuartTask;
@@ -511,5 +539,4 @@ int main(void)
     {
 
     }
-
 }

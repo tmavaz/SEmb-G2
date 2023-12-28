@@ -4,7 +4,6 @@
  * Função que faz a inicialização dos pinos do lcd
  *
  */
-
 void Lcd_pin_Init()
 {
     //inicialização dos pinos de dados do lcd D7...D4
