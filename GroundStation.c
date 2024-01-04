@@ -26,6 +26,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
 #include "driverlib/gpio.h"
@@ -63,6 +64,8 @@
 #define HUMIDITY 5
 #define ACCELERATION 6
 #define PRESSURE 7
+#define RSSI 8
+#define SNR 9
 
 // Estrutura dos dados enviados pelo satélite
 typedef struct Packet
@@ -74,6 +77,8 @@ typedef struct Packet
     float humidity;
     float acceleration;
     float pressure;
+    float rssi;
+    float snr;
 } Packet;
 
 // Declaração das queues
@@ -82,6 +87,7 @@ QueueHandle_t buzzer_queue;
 QueueHandle_t uart_queue;
 
 Packet packet;
+float packetcount = 0;
 //*****************************************************************************
 //
 // The error routine that is called if the driver library encounters an error.
@@ -114,7 +120,8 @@ void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName)
 float packet_division(char *buffer, int number)
 {
     //char buffer[];
-    int i = 0;
+    int index = 0;
+    int j = 0;
     char packet_number[6];
     char light_sensor[4];
     char CPU_temp[4];
@@ -122,76 +129,121 @@ float packet_division(char *buffer, int number)
     char humidity[4];
     char acceleration[4];
     char pressure[5];
+    char rssi[4];
+    char snr[4];
 
     //copiar o packet number
-    for (i = 3; buffer[i] != ','; i++)
+    for (index = 3; buffer[index] != ','; index++)
     {
-        packet_number[i - 3] = buffer[i];
+        packet_number[j] = buffer[index];
+        j++;
     }
 
     // Adiciona o caracter nulo ao final da string
     packet_number[5] = '\0';
     packet.packet_number = atof(packet_number);
 
-    i++;
+    index++;
+    j = 0;
     //copiar o light sensor
-    for (; buffer[i] != ','; i++)
+    for (; buffer[index] != ','; index++)
     {
-        light_sensor[i - 9] = buffer[i];
+        light_sensor[j] = buffer[index];
+        j++;
     }
     // Adiciona o caracter nulo ao final da string
     light_sensor[3] = '\0';
     packet.light_sensor = atof(light_sensor);
 
     //copiar a temperatura do CPU
-    i++;
-    for (; buffer[i] != ','; i++)
+    index++;
+    j = 0;
+    for (; buffer[index] != ','; index++)
     {
-        CPU_temp[i - 13] = buffer[i];
+        CPU_temp[j] = buffer[index];
+        j++;
     }
     // Adiciona o caracter nulo ao final da string
     CPU_temp[3] = '\0';
     packet.CPU_temp = atof(CPU_temp);
 
     //copiar a temperatura média do satélite
-    i++;
-    for (; buffer[i] != ','; i++)
+    index++;
+    j = 0;
+    for (; buffer[index] != ','; index++)
     {
-        average_temp[i - 17] = buffer[i];
+        average_temp[j] = buffer[index];
+        j++;
     }
     // Adiciona o caracter nulo ao final da string
     average_temp[3] = '\0';
     packet.average_temp = atof(average_temp);
 
     //copiar a humidade
-    i++;
-    for (; buffer[i] != ','; i++)
+    index++;
+    j = 0;
+    for (; buffer[index] != ','; index++)
     {
-        humidity[i - 21] = buffer[i];
+        humidity[j] = buffer[index];
+        j++;
     }
     // Adiciona o caracter nulo ao final da string
     humidity[3] = '\0';
     packet.humidity = atof(humidity);
 
     //copiar a aceleração
-    i++;
-    for (; buffer[i] != ','; i++)
+    index++;
+    j = 0;
+    for (; buffer[index] != ','; index++)
     {
-        acceleration[i - 25] = buffer[i];
+        acceleration[j] = buffer[index];
+        j++;
     }
     // Adiciona o caracter nulo ao final da string
     acceleration[3] = '\0';
     packet.acceleration = atof(acceleration);
 
     //copiar a pressão
-    i++;
-    for (; buffer[i] != ';'; i++)
+    index++;
+    j = 0;
+    for (; buffer[index] != ';'; index++)
     {
-        pressure[i - 29] = buffer[i];
+        pressure[j] = buffer[index];
+        j++;
     }
     // Adiciona o caracter nulo ao final da string
     pressure[4] = '\0';
     packet.pressure = atof(pressure);
+
+    //copiar o rssi
+    index++;
+    for (; buffer[index] != '-'; index++)
+    {
+        j = 0;
+    };
+
+    index++;
+    j = 0;
+    for (; buffer[index] != ','; index++)
+    {
+        rssi[j] = buffer[index];
+        j++;
+    }
+    // Adiciona o caracter nulo ao final da string
+    rssi[3] = '\0';
+    packet.rssi = atof(rssi);
+
+    //copiar o snr
+    index++;
+    j = 0;
+    for (; buffer[index] != '\0'; index++)
+    {
+        snr[j] = buffer[index];
+        j++;
+    }
+    // Adiciona o caracter nulo ao final da string
+    snr[3] = '\0';
+    packet.snr = atof(snr);
 
     switch (number)
     {
@@ -209,6 +261,10 @@ float packet_division(char *buffer, int number)
         return packet.acceleration;
     case PRESSURE:
         return packet.pressure;
+    case RSSI:
+        return packet.rssi;
+    case SNR:
+        return packet.snr;
     }
 }
 
@@ -233,14 +289,9 @@ void keyboardTask()
         if (key_pressed_previous != key_pressed)
         {
             key_pressed_previous = key_pressed;
+
+            //Temperatura
             if (key_pressed == '1')
-            {
-                taskENTER_CRITICAL();
-                Lcd_Clear();
-                Lcd_Write_String("Bem vindo Rocha! ;)");
-                taskEXIT_CRITICAL();
-            }
-            if (key_pressed == '2')  //Temperatura
             {
                 //Recebe dados da fila
                 sucessfulReceived = xQueueReceive(temp_queue, &receivedData,
@@ -251,7 +302,8 @@ void keyboardTask()
 
                     if (receivedData > TEMP_THRESHOLD)
                     {
-                        xQueueSend(buzzer_queue, 3, portMAX_DELAY);
+                        int three = 3;
+                        xQueueSend(buzzer_queue, &three, 100);
                     }
                     taskENTER_CRITICAL();
                     Lcd_Clear();
@@ -267,71 +319,20 @@ void keyboardTask()
                     taskEXIT_CRITICAL();
                 }
             }
-            if (key_pressed == '3')  //PocketQueue - numero do pacote
-            {
-                ftoa(packet.packet_number, string, 0);
-                taskENTER_CRITICAL();
-                Lcd_Clear();
-                Lcd_Write_String("Nr do pacote:");
-                Lcd_Write_String(string);
-                taskEXIT_CRITICAL();
 
-            }
-            if (key_pressed == '4')  //PocketQueue - sensor de luz
+            //PocketQube - numero de pacotes recebidos
+            if (key_pressed == '2')
             {
-                ftoa(packet.light_sensor, string, 0);
+                ftoa(packetcount, string, 0);
                 taskENTER_CRITICAL();
                 Lcd_Clear();
-                Lcd_Write_String("Sensor de luz:");
+                Lcd_Write_String("Nr de pacotes:");
                 Lcd_Write_String(string);
                 taskEXIT_CRITICAL();
             }
-            if (key_pressed == '5')  //PocketQueue - temperatura do CPU
-            {
-                ftoa(packet.CPU_temp, string, 0);
-                taskENTER_CRITICAL();
-                Lcd_Clear();
-                Lcd_Write_String("Temp. do CPU:");
-                Lcd_Write_String(string);
-                taskEXIT_CRITICAL();
-            }
-            if (key_pressed == '6') //PocketQueue - temperatura média do satélite
-            {
-                ftoa(packet.average_temp, string, 0);
-                taskENTER_CRITICAL();
-                Lcd_Clear();
-                Lcd_Write_String("Temp. do sat:");
-                Lcd_Write_String(string);
-                taskEXIT_CRITICAL();
-            }
-            if (key_pressed == '7')  //PocketQueue - humidade
-            {
-                ftoa(packet.humidity, string, 0);
-                taskENTER_CRITICAL();
-                Lcd_Clear();
-                Lcd_Write_String("Humidade:");
-                Lcd_Write_String(string);
-                taskEXIT_CRITICAL();
-            }
-            if (key_pressed == '8')  //PocketQueue - acelaração
-            {
-                ftoa(packet.acceleration, string, 0);
-                taskENTER_CRITICAL();
-                Lcd_Clear();
-                Lcd_Write_String("Aceleracao:");
-                Lcd_Write_String(string);
-                taskEXIT_CRITICAL();
-            }
-            if (key_pressed == '9')  //PocketQueue - pressão
-            {
-                ftoa(packet.pressure, string, 0);
-                taskENTER_CRITICAL();
-                Lcd_Clear();
-                Lcd_Write_String("Pressao:");
-                Lcd_Write_String(string);
-                taskEXIT_CRITICAL();
-            }
-            if (key_pressed == 'A')  //PocketQueue
+
+            //PocketQube - todos os dados
+            if (key_pressed == '3')
             {
                 //Recebe dados da fila
                 sucessfulReceived = xQueueReceive(uart_queue, &buffer, 100);
@@ -353,7 +354,109 @@ void keyboardTask()
                     taskEXIT_CRITICAL();
                 }
             }
-            if (key_pressed == 'D')  //Data
+
+            //PocketQube - numero do pacote
+            if (key_pressed == 'F')
+            {
+                ftoa(packet.packet_number, string, 0);
+                taskENTER_CRITICAL();
+                Lcd_Clear();
+                Lcd_Write_String("Nr do pacote:");
+                Lcd_Write_String(string);
+                taskEXIT_CRITICAL();
+
+            }
+
+            //PocketQube - sensor de luz
+            if (key_pressed == '4')
+            {
+                ftoa(packet.light_sensor, string, 0);
+                taskENTER_CRITICAL();
+                Lcd_Clear();
+                Lcd_Write_String("Sensor de luz:");
+                Lcd_Write_String(string);
+                taskEXIT_CRITICAL();
+            }
+
+            //PocketQube - temperatura do CPU
+            if (key_pressed == '5')
+            {
+                ftoa(packet.CPU_temp, string, 0);
+                taskENTER_CRITICAL();
+                Lcd_Clear();
+                Lcd_Write_String("Temp. do CPU:");
+                Lcd_Write_String(string);
+                taskEXIT_CRITICAL();
+            }
+
+            //PocketQube - temperatura média do satélite
+            if (key_pressed == '6')
+            {
+                ftoa(packet.average_temp, string, 0);
+                taskENTER_CRITICAL();
+                Lcd_Clear();
+                Lcd_Write_String("Temp. do sat:");
+                Lcd_Write_String(string);
+                taskEXIT_CRITICAL();
+            }
+
+            //PocketQube - humidade
+            if (key_pressed == 'E')
+            {
+                ftoa(packet.humidity, string, 0);
+                taskENTER_CRITICAL();
+                Lcd_Clear();
+                Lcd_Write_String("Humidade:");
+                Lcd_Write_String(string);
+                taskEXIT_CRITICAL();
+            }
+
+            //PocketQube - aceleração
+            if (key_pressed == '7')
+            {
+                ftoa(packet.acceleration, string, 0);
+                taskENTER_CRITICAL();
+                Lcd_Clear();
+                Lcd_Write_String("Aceleracao:");
+                Lcd_Write_String(string);
+                taskEXIT_CRITICAL();
+            }
+
+            //PocketQube - pressão
+            if (key_pressed == '8')
+            {
+                ftoa(packet.pressure, string, 0);
+                taskENTER_CRITICAL();
+                Lcd_Clear();
+                Lcd_Write_String("Pressao:");
+                Lcd_Write_String(string);
+                taskEXIT_CRITICAL();
+            }
+
+            //PocketQube - RSSI
+            if (key_pressed == '9')
+            {
+                ftoa(packet.rssi, string, 0);
+                taskENTER_CRITICAL();
+                Lcd_Clear();
+                Lcd_Write_String("RSSI: -");
+                Lcd_Write_String(string);
+                taskEXIT_CRITICAL();
+            }
+
+            //PocketQube - SNR
+            if (key_pressed == 'D')
+            {
+                ftoa(packet.snr, string, 0);
+                taskENTER_CRITICAL();
+                Lcd_Clear();
+                Lcd_Write_String("SNR:");
+                Lcd_Write_String(string);
+                taskEXIT_CRITICAL();
+            }
+
+            //Data
+            if (key_pressed == 'A')
             {
                 ftoa(date.mes, stringmes, 0);
                 ftoa(date.dia, stringdia, 0);
@@ -377,11 +480,17 @@ void keyboardTask()
                 Lcd_Write_String(stringsegundo);
                 taskEXIT_CRITICAL();
             }
-            /*if (key_pressed == 'B')   //Tocar o buzzer
+
+            //Tocar o buzzer
+            if (key_pressed == 'B')
             {
-                xQueueSend(buzzer_queue, 2, portMAX_DELAY);
-            }*/
-            if (key_pressed == 'C')  //Clear
+                int two=2;
+                xQueueSend(buzzer_queue, &two, 250);
+
+            }
+
+            //Clear
+            if (key_pressed == 'C')
             {
                 taskENTER_CRITICAL();
                 Lcd_Clear();
@@ -419,7 +528,8 @@ void tempTask()
 
 void buzzerTask()
 {
-    int i, j, n;
+    int i, j;
+    int n = 0;
     while (1)
     {
         xQueueReceive(buzzer_queue, &n, portMAX_DELAY);
@@ -428,9 +538,9 @@ void buzzerTask()
             for (i = 0; i < 500; i++)
             {
                 GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_7, GPIO_PIN_7);
-                vTaskDelay(pdMS_TO_TICKS(1 / 100));
+                vTaskDelay(pdMS_TO_TICKS(1) / 100);
                 GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_7, 0x0);
-                vTaskDelay(pdMS_TO_TICKS(1 / 100));
+                vTaskDelay(pdMS_TO_TICKS(1) / 100);
             }
             vTaskDelay(pdMS_TO_TICKS(100));
         }
@@ -442,6 +552,7 @@ void uartTask()
     uint8_t i = 0;
     char receivedChar;
     char buffer[buffer_size];
+    char buffer_trash[buffer_size];
     int charP = 0;
 
     while (1)
@@ -459,15 +570,24 @@ void uartTask()
             if (receivedChar == 'P')
             {
                 charP = 1;
+                //taskENTER_CRITICAL();
             }
 
             // Verifica se e um caracter de terminaçao
             if (receivedChar == '\n' || receivedChar == '\r')
             {
+                //taskEXIT_CRITICAL();
                 charP = 0;
                 // Adiciona o caracter nulo ao final da string
                 buffer[i] = '\0';
-                xQueueSend(uart_queue, &buffer, portMAX_DELAY);
+
+                //Faz o buffer circular se a fila de 20 pacotes estiver cheia ...
+                //faz a receção de um deles que elimina da fila e escreve na fila o novo
+                while (xQueueSend(uart_queue, &buffer, 100) != pdTRUE)
+                {
+                    xQueueReceive(uart_queue, &buffer_trash, 100);
+                }
+                packetcount++;
                 i = 0;
                 break;
             }
@@ -503,6 +623,9 @@ int main(void)
 
     date_init();
     timer_init();
+
+    Lcd_Clear();
+    Lcd_Write_String("Bem vindo!");
 
     ////////////////////////////////////////////////////////////////////////////////////
     BaseType_t xkeyboardTask, xtempTask, xbuzzerTask, xuartTask;

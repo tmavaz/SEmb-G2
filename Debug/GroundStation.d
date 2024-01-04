@@ -10,6 +10,7 @@ GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/std
 GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdio.h
 GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdarg.h
 GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h
+GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/string.h
 GroundStation.obj: C:/ti/tivaware_c_series_2_1_4_178/inc/hw_memmap.h
 GroundStation.obj: C:/ti/tivaware_c_series_2_1_4_178/inc/hw_types.h
 GroundStation.obj: C:/ti/tivaware_c_series_2_1_4_178/driverlib/gpio.h
@@ -130,6 +131,8 @@ C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdio.h:
 C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdarg.h:
 
 C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h:
+
+C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/string.h:
 
 C:/ti/tivaware_c_series_2_1_4_178/inc/hw_memmap.h:
 
