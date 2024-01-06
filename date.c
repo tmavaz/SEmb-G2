@@ -7,9 +7,6 @@ void add_second()
     //TimerLoadSet(TIMER0_BASE, TIMER_A, SysCtlClockGet());
     TimerLoadSet(TIMER0_BASE, TIMER_A, SysCtlClockGet());
 
-    //Lcd_Clear();
-    //Lcd_Write_String("ISR");
-
     if (date.segundo == 59)
     {
         date.segundo = 0;
@@ -29,7 +26,7 @@ void add_second()
 
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-    // Lógica de tratamento de interrupção UART
+    // Lógica de tratamento de interrupção
 
     // Indica que uma mudança de contexto pode ser realizada
     portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
@@ -37,32 +34,6 @@ void add_second()
 
 void timer_init()
 {
-    /*SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
-
-     // Wait for the Timer0 module to be ready.
-     while (!SysCtlPeripheralReady(SYSCTL_PERIPH_TIMER0)){}
-
-     // Configure Timer
-     TimerConfigure(TIMER0_BASE, TIMER_CFG_RTC);
-
-     // Set the count time for the the one-shot timer (TimerA).
-     TimerLoadSet(TIMER0_BASE, TIMER_A, 100); //SysCtlClockGet()
-
-     // Habilita a interrupção do Timer 0
-     TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT ); //TIMER_RTC_MATCH
-
-     // Configure the counter (TimerA) to count positive edge.
-     TimerControlEvent(TIMER0_BASE, TIMER_A, TIMER_EVENT_POS_EDGE);
-
-     // Registra a função de tratamento de interrupção para o Timer 0
-     TimerIntRegister(TIMER0_BASE, TIMER_A, add_second);
-
-     TimerRTCEnable(TIMER0_BASE);
-     // Enable the timers.
-     TimerEnable(TIMER0_BASE, TIMER_A);*/
-    // Configuração do sistema
-    //SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
-
     // Habilita o periférico do Timer 0
     SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
 
@@ -78,10 +49,6 @@ void timer_init()
 
     // Habilita a interrupção de estouro do Timer 0
     TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
-
-    // Habilita as interrupções globalmente
-    IntMasterEnable();
-
 }
 
 char key_reader()

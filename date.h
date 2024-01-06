@@ -12,16 +12,10 @@
 #include <time.h>
 #include "keyboard.h"
 #include "LCD.h"
-
-
-
-
 #include "inc/hw_types.h"
-#include "driverlib/gpio.h"
 #include "driverlib/pin_map.h"
 #include "driverlib/rom.h"
 #include "driverlib/uart.h"
-
 #include "utils/uartstdio.h"
 #include "FreeRTOS.h"
 #include "task.h"

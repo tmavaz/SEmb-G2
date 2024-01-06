@@ -23,7 +23,7 @@ GroundStation.obj: C:/ti/tivaware_c_series_2_1_4_178/utils/uartstdio.h
 GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdarg.h
 GroundStation.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/FreeRTOS.h
 GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stddef.h
-GroundStation.obj: C:/Users/franc/Downloads/blinky\ (1)/GroundStation/FreeRTOSConfig.h
+GroundStation.obj: C:/Users/tmava/workspace_v12/GroundStation/FreeRTOSConfig.h
 GroundStation.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/projdefs.h
 GroundStation.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/portable.h
 GroundStation.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/deprecated_definitions.h
@@ -78,14 +78,6 @@ GroundStation.obj: ../LCD.h
 GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h
 GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h
 GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h
-GroundStation.obj: ../UART.h
-GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdio.h
-GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h
-GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/string.h
-GroundStation.obj: ../LCD.h
-GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h
-GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h
-GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h
 GroundStation.obj: ../I2C.h
 GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdio.h
 GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h
@@ -110,6 +102,14 @@ GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/std
 GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h
 GroundStation.obj: ../LCD.h
 GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h
+GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h
+GroundStation.obj: ../UART.h
+GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdio.h
+GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h
+GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/string.h
+GroundStation.obj: ../LCD.h
+GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h
+GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h
 GroundStation.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h
 
 ../GroundStation.c:
@@ -158,7 +158,7 @@ C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/FreeRTOS.h
 
 C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stddef.h:
 
-C:/Users/franc/Downloads/blinky\ (1)/GroundStation/FreeRTOSConfig.h:
+C:/Users/tmava/workspace_v12/GroundStation/FreeRTOSConfig.h:
 
 C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/projdefs.h:
 
@@ -268,22 +268,6 @@ C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h:
 
 C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h:
 
-../UART.h:
-
-C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdio.h:
-
-C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h:
-
-C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/string.h:
-
-../LCD.h:
-
-C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h:
-
-C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h:
-
-C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h:
-
 ../I2C.h:
 
 C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdio.h:
@@ -331,6 +315,22 @@ C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h:
 ../LCD.h:
 
 C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h:
+
+C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h:
+
+../UART.h:
+
+C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdio.h:
+
+C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h:
+
+C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/string.h:
+
+../LCD.h:
+
+C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h:
+
+C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h:
 
 C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h:
 

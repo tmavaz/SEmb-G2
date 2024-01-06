@@ -43,6 +43,7 @@
 #include "keyboard.h"
 #include "blinky.h"
 #include "date.h"
+#include "UART.h"
 
 // Define o tamanho da queue temp
 #define TEMP_QUEUE_LENGTH 1
@@ -86,8 +87,10 @@ QueueHandle_t temp_queue;
 QueueHandle_t buzzer_queue;
 QueueHandle_t uart_queue;
 
+
 Packet packet;
 float packetcount = 0;
+
 //*****************************************************************************
 //
 // The error routine that is called if the driver library encounters an error.
@@ -266,6 +269,7 @@ float packet_division(char *buffer, int number)
     case SNR:
         return packet.snr;
     }
+    return 0;
 }
 
 void keyboardTask()
@@ -305,18 +309,14 @@ void keyboardTask()
                         int three = 3;
                         xQueueSend(buzzer_queue, &three, 100);
                     }
-                    taskENTER_CRITICAL();
                     Lcd_Clear();
                     Lcd_Write_String("Temperatura: ");
                     Lcd_Write_String(string);
-                    taskEXIT_CRITICAL();
                 }
                 else
                 {
-                    taskENTER_CRITICAL();
                     Lcd_Clear();
                     Lcd_Write_String("Nao ha dados da temperatura");
-                    taskEXIT_CRITICAL();
                 }
             }
 
@@ -324,11 +324,9 @@ void keyboardTask()
             if (key_pressed == '2')
             {
                 ftoa(packetcount, string, 0);
-                taskENTER_CRITICAL();
                 Lcd_Clear();
                 Lcd_Write_String("Nr de pacotes:");
                 Lcd_Write_String(string);
-                taskEXIT_CRITICAL();
             }
 
             //PocketQube - todos os dados
@@ -340,18 +338,14 @@ void keyboardTask()
                 if (sucessfulReceived == pdTRUE)
                 {
                     packet_division(&buffer, PACKET_NUMBER);
-                    taskENTER_CRITICAL();
                     Lcd_Clear();
                     for (i = 0; i < 20; i++)
                         Lcd_Write_Char(buffer[i]);
-                    taskEXIT_CRITICAL();
                 }
                 else
                 {
-                    taskENTER_CRITICAL();
                     Lcd_Clear();
                     Lcd_Write_String("Nao ha dados do satelite");
-                    taskEXIT_CRITICAL();
                 }
             }
 
@@ -359,11 +353,9 @@ void keyboardTask()
             if (key_pressed == 'F')
             {
                 ftoa(packet.packet_number, string, 0);
-                taskENTER_CRITICAL();
                 Lcd_Clear();
                 Lcd_Write_String("Nr do pacote:");
                 Lcd_Write_String(string);
-                taskEXIT_CRITICAL();
 
             }
 
@@ -371,88 +363,72 @@ void keyboardTask()
             if (key_pressed == '4')
             {
                 ftoa(packet.light_sensor, string, 0);
-                taskENTER_CRITICAL();
                 Lcd_Clear();
                 Lcd_Write_String("Sensor de luz:");
                 Lcd_Write_String(string);
-                taskEXIT_CRITICAL();
             }
 
             //PocketQube - temperatura do CPU
             if (key_pressed == '5')
             {
                 ftoa(packet.CPU_temp, string, 0);
-                taskENTER_CRITICAL();
                 Lcd_Clear();
                 Lcd_Write_String("Temp. do CPU:");
                 Lcd_Write_String(string);
-                taskEXIT_CRITICAL();
             }
 
             //PocketQube - temperatura média do satélite
             if (key_pressed == '6')
             {
                 ftoa(packet.average_temp, string, 0);
-                taskENTER_CRITICAL();
                 Lcd_Clear();
                 Lcd_Write_String("Temp. do sat:");
                 Lcd_Write_String(string);
-                taskEXIT_CRITICAL();
             }
 
             //PocketQube - humidade
             if (key_pressed == 'E')
             {
                 ftoa(packet.humidity, string, 0);
-                taskENTER_CRITICAL();
                 Lcd_Clear();
                 Lcd_Write_String("Humidade:");
                 Lcd_Write_String(string);
-                taskEXIT_CRITICAL();
             }
 
             //PocketQube - aceleração
             if (key_pressed == '7')
             {
                 ftoa(packet.acceleration, string, 0);
-                taskENTER_CRITICAL();
                 Lcd_Clear();
                 Lcd_Write_String("Aceleracao:");
                 Lcd_Write_String(string);
-                taskEXIT_CRITICAL();
             }
 
             //PocketQube - pressão
             if (key_pressed == '8')
             {
-                ftoa(packet.pressure, string, 0);
-                taskENTER_CRITICAL();
+                ftoa(packet.pressure, string, 0);;
                 Lcd_Clear();
                 Lcd_Write_String("Pressao:");
                 Lcd_Write_String(string);
-                taskEXIT_CRITICAL();
             }
 
             //PocketQube - RSSI
             if (key_pressed == '9')
             {
                 ftoa(packet.rssi, string, 0);
-                taskENTER_CRITICAL();
                 Lcd_Clear();
                 Lcd_Write_String("RSSI: -");
                 Lcd_Write_String(string);
-                taskEXIT_CRITICAL();
             }
 
             //PocketQube - SNR
             if (key_pressed == 'D')
             {
                 ftoa(packet.snr, string, 0);
-                taskENTER_CRITICAL();
                 Lcd_Clear();
                 Lcd_Write_String("SNR:");
                 Lcd_Write_String(string);
-                taskEXIT_CRITICAL();
             }
 
             //Data
@@ -465,7 +441,7 @@ void keyboardTask()
                 ftoa(date.minuto, stringminuto, 0);
                 ftoa(date.segundo, stringsegundo, 0);
 
-                taskENTER_CRITICAL();
+
                 Lcd_Clear();
                 Lcd_Write_String(stringmes);
                 Lcd_Write_String("-");
@@ -478,13 +454,12 @@ void keyboardTask()
                 Lcd_Write_String(stringminuto);
                 Lcd_Write_String(":");
                 Lcd_Write_String(stringsegundo);
-                taskEXIT_CRITICAL();
             }
 
             //Tocar o buzzer
             if (key_pressed == 'B')
             {
-                int two=2;
+                int two = 2;
                 xQueueSend(buzzer_queue, &two, 250);
 
             }
@@ -492,9 +467,7 @@ void keyboardTask()
             //Clear
             if (key_pressed == 'C')
             {
-                taskENTER_CRITICAL();
                 Lcd_Clear();
-                taskEXIT_CRITICAL();
             }
         }
     }
@@ -557,51 +530,47 @@ void uartTask()
 
     while (1)
     {
-        while (i < buffer_size - 1)
-        {
-            //Aguarda ate que um caracter esteja disponivel para leitura
-            while (!UARTCharsAvail(UART7_BASE))
-                vTaskDelay(pdMS_TO_TICKS(1));
-
-            // Le um caractere da porta UART
-            receivedChar = UARTCharGet(UART7_BASE);
-
-            // Verifica se e um caracter de terminaçao
-            if (receivedChar == 'P')
+        if(xSemaphoreTake(uart_semaphore,portMAX_DELAY) == pdTRUE){
+            while (i < buffer_size - 1)
             {
-                charP = 1;
-                //taskENTER_CRITICAL();
-            }
+                //Aguarda ate que um caracter esteja disponivel para leitura
+                while (!UARTCharsAvail(UART7_BASE))
+                    vTaskDelay(pdMS_TO_TICKS(1));
 
-            // Verifica se e um caracter de terminaçao
-            if (receivedChar == '\n' || receivedChar == '\r')
-            {
-                //taskEXIT_CRITICAL();
-                charP = 0;
-                // Adiciona o caracter nulo ao final da string
-                buffer[i] = '\0';
+                // Le um caracter da porta UART
+                receivedChar = UARTCharGet(UART7_BASE);
 
-                //Faz o buffer circular se a fila de 20 pacotes estiver cheia ...
-                //faz a receção de um deles que elimina da fila e escreve na fila o novo
-                while (xQueueSend(uart_queue, &buffer, 100) != pdTRUE)
+                // Verifica se e um caracter de terminaçao
+                if (receivedChar == 'P')
                 {
-                    xQueueReceive(uart_queue, &buffer_trash, 100);
+                    charP = 1;
                 }
-                packetcount++;
-                i = 0;
-                break;
-            }
 
-            // Armazena o caracter no buffer
-            if (charP == 1)
-            {
-                buffer[i++] = receivedChar;
-                //Lcd_Write_Char(receivedChar);
-                //i++;
-                //return buffer;
+                // Verifica se e um caracter de terminaçao
+                if (receivedChar == '\n' || receivedChar == '\r')
+                {
+                    charP = 0;
+                    // Adiciona o caracter nulo ao final da string
+                    buffer[i] = '\0';
+
+                    //Faz o buffer circular se a fila de 20 pacotes estiver cheia ...
+                    //faz a receção de um deles que elimina da fila e escreve na fila o novo
+                    while (xQueueSend(uart_queue, &buffer, 100) != pdTRUE)
+                    {
+                        xQueueReceive(uart_queue, &buffer_trash, 100);
+                    }
+                    packetcount++;
+                    i = 0;
+                    break;
+                }
+
+                // Armazena o caracter no buffer
+                if (charP == 1)
+                {
+                    buffer[i++] = receivedChar;
+                }
             }
         }
-        vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
 
@@ -616,13 +585,18 @@ int main(void)
     buzzer_init();
     Lcd_pin_Init();
     Lcd_Init();
-    UART_init();
+
     keyboard_init();
 
-    Lcd_Clear();
 
+    Lcd_Clear();
     date_init();
     timer_init();
+    UART_init();
+
+
+    // Habilita as interrupções globalmente
+    IntMasterEnable();
 
     Lcd_Clear();
     Lcd_Write_String("Bem vindo!");
@@ -640,20 +614,28 @@ int main(void)
     // Verificação temp_queue e buzzer_queue
     if (temp_queue == NULL || buzzer_queue == NULL || uart_queue == NULL)
     {
-        printf("Erro na criacao da queue.");
+        Lcd_Write_String("Erro na criacao da queue.");
+    }
+
+    //Inicialização do semaforo
+    uart_semaphore = xSemaphoreCreateBinary();
+
+    if (uart_semaphore == NULL)
+    {
+        Lcd_Write_String("Erro na criacao do semaforo.");
     }
 
     // Criação das tarefas
     xkeyboardTask = xTaskCreate(keyboardTask, "Keyboard", 200, NULL, 1, NULL);
     xtempTask = xTaskCreate(tempTask, "Temperature", 200, NULL, 1, NULL);
-    xbuzzerTask = xTaskCreate(buzzerTask, "Buzzer", 200, NULL, 1, NULL);
-    xuartTask = xTaskCreate(uartTask, "UART", 200, NULL, 2, NULL);
+    xbuzzerTask = xTaskCreate(buzzerTask, "Buzzer", 200, NULL, 2, NULL);
+    xuartTask = xTaskCreate(uartTask, "UART", 200, NULL, 3, NULL);
 
     // Verficação da criação das tasks
     if (xkeyboardTask != pdPASS || xtempTask != pdPASS || xbuzzerTask != pdPASS
             || xuartTask != pdPASS)
     {
-        printf("Erro na criacao da task");
+        Lcd_Write_String("Erro na criacao da task");
     }
 
     vTaskStartScheduler();
