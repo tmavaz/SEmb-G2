@@ -3,24 +3,27 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <time.h>
 #include "driverlib/sysctl.h"
 #include "driverlib/timer.h"
 #include "driverlib/gpio.h"
 #include "inc/tm4c123gh6pm.h"
 #include "inc/hw_memmap.h"
 #include "driverlib/interrupt.h"
-#include <time.h>
-#include "keyboard.h"
-#include "LCD.h"
 #include "inc/hw_types.h"
 #include "driverlib/pin_map.h"
 #include "driverlib/rom.h"
 #include "driverlib/uart.h"
 #include "utils/uartstdio.h"
+#include "keyboard.h"
+#include "LCD.h"
 #include "FreeRTOS.h"
 #include "task.h"
 
-//Definição dos parâmetros da data e hora
+/*
+ * Estrutura de dados para definir os parâmetros da data e hora
+ *
+ */
 typedef struct Date
 {
     float mes;

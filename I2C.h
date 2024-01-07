@@ -1,12 +1,8 @@
-/*
- *
- * Alterar estas bibliotecas
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <math.h>
 #include <stdbool.h>
 #include "driverlib/gpio.h"
 #include "driverlib/sysctl.h"
@@ -16,7 +12,6 @@
 #include "inc/hw_i2c.h"
 #include "inc/hw_memmap.h"
 #include "driverlib/uart.h"
-#include <math.h>
 
 void I2Cinit();
 void I2CSend(uint8_t slave_addr);

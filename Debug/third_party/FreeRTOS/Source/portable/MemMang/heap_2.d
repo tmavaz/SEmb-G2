@@ -6,7 +6,7 @@ third_party/FreeRTOS/Source/portable/MemMang/heap_2.obj: C:/ti/ccs1250/ccs/tools
 third_party/FreeRTOS/Source/portable/MemMang/heap_2.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/FreeRTOS.h
 third_party/FreeRTOS/Source/portable/MemMang/heap_2.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stddef.h
 third_party/FreeRTOS/Source/portable/MemMang/heap_2.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdint.h
-third_party/FreeRTOS/Source/portable/MemMang/heap_2.obj: C:/Users/tmava/workspace_v12/GroundStation/FreeRTOSConfig.h
+third_party/FreeRTOS/Source/portable/MemMang/heap_2.obj: C:/Users/franc/Downloads/blinky\ (1)/GroundStation/FreeRTOSConfig.h
 third_party/FreeRTOS/Source/portable/MemMang/heap_2.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/projdefs.h
 third_party/FreeRTOS/Source/portable/MemMang/heap_2.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/portable.h
 third_party/FreeRTOS/Source/portable/MemMang/heap_2.obj: C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/deprecated_definitions.h
@@ -27,7 +27,7 @@ C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stddef.h:
 
 C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdint.h:
 
-C:/Users/tmava/workspace_v12/GroundStation/FreeRTOSConfig.h:
+C:/Users/franc/Downloads/blinky\ (1)/GroundStation/FreeRTOSConfig.h:
 
 C:/ti/tivaware_c_series_2_1_4_178/third_party/FreeRTOS/Source/include/projdefs.h:
 

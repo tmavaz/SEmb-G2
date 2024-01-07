@@ -69,7 +69,6 @@ C_DEPS__QUOTED += \
 "startup_ccs.d" 
 
 C_SRCS__QUOTED += \
-"../GroundStation.c" \
 "../I2C.c" \
 "../LCD.c" \
 "../UART.c" \

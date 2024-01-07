@@ -1,10 +1,12 @@
 #include "date.h"
 
-//Função que adiciona um segundo à contagem
+/*
+ * Função que adiciona um segundo à contagem
+ *
+ */
 void add_second()
 {
     TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
-    //TimerLoadSet(TIMER0_BASE, TIMER_A, SysCtlClockGet());
     TimerLoadSet(TIMER0_BASE, TIMER_A, SysCtlClockGet());
 
     if (date.segundo == 59)
@@ -26,12 +28,14 @@ void add_second()
 
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-    // Lógica de tratamento de interrupção
-
     // Indica que uma mudança de contexto pode ser realizada
     portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
 
+/*
+ * Configuracao inicial do Timer 0
+ *
+ */
 void timer_init()
 {
     // Habilita o periférico do Timer 0
@@ -51,6 +55,10 @@ void timer_init()
     TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
 }
 
+/*
+ * Faz a leitura do teclado
+ *
+ */
 char key_reader()
 {
     char key_read = 'G';
@@ -66,6 +74,10 @@ char key_reader()
     return key_pressed;
 }
 
+/*
+ * Pede ao utilizador a data e a hora e guarda
+ *
+ */
 void date_init()
 {
     char mes[3];
@@ -75,6 +87,7 @@ void date_init()
     char minuto[3];
     char segundo[3];
 
+    Lcd_Clear();
     Lcd_Write_String("MM-DD-YYYY hh:mm:ss");
     Lcd_Set_Cursor(1, 1);
     mes[0] = key_reader();
@@ -110,4 +123,3 @@ void date_init()
     date.minuto = atof(minuto);
     date.segundo = atof(segundo);
 }
-

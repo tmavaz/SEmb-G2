@@ -1,8 +1,3 @@
-/*
- *
- * Alterar estas bibliotecas
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -21,5 +16,3 @@
 
 void keyboard_init();
 char keyboard_reader();
-//void keyboard_int_handler();
-//void keyboard_int_init();

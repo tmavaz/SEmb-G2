@@ -1,8 +1,3 @@
-/*
- *
- * Alterar estas bibliotecas
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -20,5 +15,4 @@
 
 
 void buzzer_init();
-void buzzer();
 

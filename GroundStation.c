@@ -1,27 +1,13 @@
 //*****************************************************************************
+// Esta√ß√£o Terrestre para uma LoRa PocketQube
 //
-// freertos_demo.c - Simple FreeRTOS example.
+// Realizado por:
+//  - Jo√£o Cordeiro,    99150
+//  - Maria Francisca Rodrigues,    99156
+//  - Tiago Vaz,    110984
 //
-// Copyright (c) 2012-2017 Texas Instruments Incorporated.  All rights reserved.
-// Software License Agreement
-// 
-// Texas Instruments (TI) is supplying this software for use solely and
-// exclusively on TI's microcontroller products. The software is owned by
-// TI and/or its suppliers, and is protected under applicable copyright
-// laws. You may not combine this software with "viral" open-source
-// software in order to form a larger program.
-// 
-// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
-// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
-// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
-// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
-// DAMAGES, FOR ANY REASON WHATSOEVER.
-// 
-// This is part of revision 2.1.4.178 of the EK-TM4C123GXL Firmware Package.
-//
+//  Ano Letivo 2023/2024
 //*****************************************************************************
-
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -54,10 +40,11 @@
 // Define o tamanho dos itens na queue temp
 #define ITEM_SIZE sizeof(float)
 // Define um threshold para o sensor de temperatura
-#define TEMP_THRESHOLD 30
+#define TEMP_THRESHOLD 23
 // Define o tamanho dos itens na queue uart
 #define UART_SIZE 100*sizeof(char)
 
+// Define o tamanho dos v√°rios par√¢metros do pacote
 #define PACKET_NUMBER 1
 #define LIGHT_SENSOR 2
 #define CPU_TEMP 3
@@ -68,7 +55,7 @@
 #define RSSI 8
 #define SNR 9
 
-// Estrutura dos dados enviados pelo satÈlite
+// Estrutura dos dados enviados pelo sat√©lite
 typedef struct Packet
 {
     float packet_number;
@@ -82,11 +69,10 @@ typedef struct Packet
     float snr;
 } Packet;
 
-// DeclaraÁ„o das queues
+// Declara√ß√£o das queues
 QueueHandle_t temp_queue;
 QueueHandle_t buzzer_queue;
 QueueHandle_t uart_queue;
-
 
 Packet packet;
 float packetcount = 0;
@@ -103,6 +89,7 @@ __error__(char *pcFilename, uint32_t ui32Line)
 }
 
 #endif
+
 //*****************************************************************************
 //
 // This hook is called by FreeRTOS when an stack overflow error is detected.
@@ -120,9 +107,11 @@ void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName)
     }
 }
 
+/*
+ * Fun√ß√£o que faz a divis√£o dos v√°rios par√¢metros recebidos por um pacote
+ */
 float packet_division(char *buffer, int number)
 {
-    //char buffer[];
     int index = 0;
     int j = 0;
     char packet_number[6];
@@ -136,117 +125,128 @@ float packet_division(char *buffer, int number)
     char snr[4];
 
     //copiar o packet number
-    for (index = 3; buffer[index] != ','; index++)
+    if (buffer[0] == 'P')
     {
-        packet_number[j] = buffer[index];
-        j++;
-    }
+        for (index = 3; buffer[index] != ','; index++)
+        {
+            packet_number[j] = buffer[index];
+            j++;
+        }
 
-    // Adiciona o caracter nulo ao final da string
-    packet_number[5] = '\0';
-    packet.packet_number = atof(packet_number);
+        // Adiciona o caracter nulo ao final da string
+        packet_number[5] = '\0';
+        packet.packet_number = atof(packet_number);
 
-    index++;
-    j = 0;
-    //copiar o light sensor
-    for (; buffer[index] != ','; index++)
-    {
-        light_sensor[j] = buffer[index];
-        j++;
-    }
-    // Adiciona o caracter nulo ao final da string
-    light_sensor[3] = '\0';
-    packet.light_sensor = atof(light_sensor);
-
-    //copiar a temperatura do CPU
-    index++;
-    j = 0;
-    for (; buffer[index] != ','; index++)
-    {
-        CPU_temp[j] = buffer[index];
-        j++;
-    }
-    // Adiciona o caracter nulo ao final da string
-    CPU_temp[3] = '\0';
-    packet.CPU_temp = atof(CPU_temp);
-
-    //copiar a temperatura mÈdia do satÈlite
-    index++;
-    j = 0;
-    for (; buffer[index] != ','; index++)
-    {
-        average_temp[j] = buffer[index];
-        j++;
-    }
-    // Adiciona o caracter nulo ao final da string
-    average_temp[3] = '\0';
-    packet.average_temp = atof(average_temp);
-
-    //copiar a humidade
-    index++;
-    j = 0;
-    for (; buffer[index] != ','; index++)
-    {
-        humidity[j] = buffer[index];
-        j++;
-    }
-    // Adiciona o caracter nulo ao final da string
-    humidity[3] = '\0';
-    packet.humidity = atof(humidity);
-
-    //copiar a aceleraÁ„o
-    index++;
-    j = 0;
-    for (; buffer[index] != ','; index++)
-    {
-        acceleration[j] = buffer[index];
-        j++;
-    }
-    // Adiciona o caracter nulo ao final da string
-    acceleration[3] = '\0';
-    packet.acceleration = atof(acceleration);
-
-    //copiar a press„o
-    index++;
-    j = 0;
-    for (; buffer[index] != ';'; index++)
-    {
-        pressure[j] = buffer[index];
-        j++;
-    }
-    // Adiciona o caracter nulo ao final da string
-    pressure[4] = '\0';
-    packet.pressure = atof(pressure);
-
-    //copiar o rssi
-    index++;
-    for (; buffer[index] != '-'; index++)
-    {
+        index++;
         j = 0;
-    };
+        //copiar o light sensor
+        for (; buffer[index] != ','; index++)
+        {
+            light_sensor[j] = buffer[index];
+            j++;
+        }
 
-    index++;
-    j = 0;
-    for (; buffer[index] != ','; index++)
-    {
-        rssi[j] = buffer[index];
-        j++;
-    }
-    // Adiciona o caracter nulo ao final da string
-    rssi[3] = '\0';
-    packet.rssi = atof(rssi);
+        // Adiciona o caracter nulo ao final da string
+        light_sensor[3] = '\0';
+        packet.light_sensor = atof(light_sensor);
 
-    //copiar o snr
-    index++;
-    j = 0;
-    for (; buffer[index] != '\0'; index++)
-    {
-        snr[j] = buffer[index];
-        j++;
+        //copiar a temperatura do CPU
+        index++;
+        j = 0;
+        for (; buffer[index] != ','; index++)
+        {
+            CPU_temp[j] = buffer[index];
+            j++;
+        }
+
+        // Adiciona o caracter nulo ao final da string
+        CPU_temp[3] = '\0';
+        packet.CPU_temp = atof(CPU_temp);
+
+        //copiar a temperatura m√©dia do sat√©lite
+        index++;
+        j = 0;
+        for (; buffer[index] != ','; index++)
+        {
+            average_temp[j] = buffer[index];
+            j++;
+        }
+
+        // Adiciona o caracter nulo ao final da string
+        average_temp[3] = '\0';
+        packet.average_temp = atof(average_temp);
+
+        //copiar a humidade
+        index++;
+        j = 0;
+        for (; buffer[index] != ','; index++)
+        {
+            humidity[j] = buffer[index];
+            j++;
+        }
+
+        // Adiciona o caracter nulo ao final da string
+        humidity[3] = '\0';
+        packet.humidity = atof(humidity);
+
+        //copiar a acelera√ß√£o
+        index++;
+        j = 0;
+        for (; buffer[index] != ','; index++)
+        {
+            acceleration[j] = buffer[index];
+            j++;
+        }
+
+        // Adiciona o caracter nulo ao final da string
+        acceleration[3] = '\0';
+        packet.acceleration = atof(acceleration);
+
+        //copiar a press√£o
+        index++;
+        j = 0;
+        for (; buffer[index] != ';'; index++)
+        {
+            pressure[j] = buffer[index];
+            j++;
+        }
+
+        // Adiciona o caracter nulo ao final da string
+        pressure[4] = '\0';
+        packet.pressure = atof(pressure);
+
+        //copiar o rssi
+        index++;
+        for (; buffer[index] != '-'; index++)
+        {
+            j = 0;
+        };
+
+        index++;
+        j = 0;
+        for (; buffer[index] != ','; index++)
+        {
+            rssi[j] = buffer[index];
+            j++;
+        }
+
+        // Adiciona o caracter nulo ao final da string
+        rssi[3] = '\0';
+        packet.rssi = atof(rssi);
+
+        //copiar o snr
+        index++;
+        j = 0;
+        for (; buffer[index] != '\0'; index++)
+        {
+            snr[j] = buffer[index];
+            j++;
+        }
+
+        // Adiciona o caracter nulo ao final da string
+        snr[3] = '\0';
+        packet.snr = atof(snr);
     }
-    // Adiciona o caracter nulo ao final da string
-    snr[3] = '\0';
-    packet.snr = atof(snr);
 
     switch (number)
     {
@@ -269,9 +269,80 @@ float packet_division(char *buffer, int number)
     case SNR:
         return packet.snr;
     }
+
     return 0;
 }
 
+/*
+ * Fun√ß√£o para encontrar o pacote pedido pelo utilizador
+ */
+void packetSearch(float npacket)
+{
+    char buffer[50];
+    char bufferall[20][50];
+    char npacketstring[6];
+    BaseType_t sucessfulReceived;
+    int j = 0;
+    int i = 0;
+    int h = 0;
+
+    Lcd_Clear();
+    Lcd_Write_String("A procurar");
+
+    // Percorre a matriz com os dados do pacote
+    while (j < UART_QUEUE_LENGTH)
+    {
+        //Recebe dados da fila
+        sucessfulReceived = xQueueReceive(uart_queue, &buffer, 100);
+
+        //Se o pacote da queue for bem recebido
+        if (sucessfulReceived == pdTRUE)
+        {
+            //Copia para a matriz os caracteres da string do pacote
+            for (h = 0; h < 50; h++)
+            {
+                bufferall[j][h] = buffer[h];
+            }
+
+            //Volta a colocar o pacote na fila
+            xQueueSend(uart_queue, &buffer, 100);
+            j++;
+            if (bufferall[j-1][0] != 'P')
+            {
+                j--;
+            }
+        }
+    }
+
+    Lcd_Clear();
+
+    // Percorre a matriz √† procura do pacote pedido pelo utilizador
+    for (j = 0; j < 20; j++)
+    {
+        for (h = 0; h < 50; h++)
+        {
+            buffer[h] = bufferall[j][h];
+        }
+
+        packet_division(&buffer, PACKET_NUMBER);
+
+        if (npacket == packet.packet_number)
+        {
+            Lcd_Clear();
+            for (i = 0; i < 20; i++)
+                Lcd_Write_Char(buffer[i]);
+            return;
+        }
+    }
+
+    Lcd_Clear();
+    Lcd_Write_String("N√£o foi encontrado");
+}
+
+/*
+ * Gere o que o sistema deve fazer quando uma
+ * tecla espec√≠fica do teclado  ÃÅe pressionada
+*/
 void keyboardTask()
 {
     BaseType_t sucessfulReceived;
@@ -286,6 +357,8 @@ void keyboardTask()
     char stringhora[3];
     char stringminuto[3];
     char stringsegundo[3];
+    char npacote[6];
+    float npacket;
 
     while (1)
     {
@@ -333,7 +406,8 @@ void keyboardTask()
             if (key_pressed == '3')
             {
                 //Recebe dados da fila
-                sucessfulReceived = xQueueReceive(uart_queue, &buffer, 100);
+                sucessfulReceived = xQueuePeek(uart_queue, &buffer, 100);
+                //sucessfulReceived = xQueueReceive(uart_queue, &buffer, 100);
 
                 if (sucessfulReceived == pdTRUE)
                 {
@@ -377,7 +451,7 @@ void keyboardTask()
                 Lcd_Write_String(string);
             }
 
-            //PocketQube - temperatura mÈdia do satÈlite
+            //PocketQube - temperatura m√©dia do sat√©lite
             if (key_pressed == '6')
             {
                 ftoa(packet.average_temp, string, 0);
@@ -395,7 +469,7 @@ void keyboardTask()
                 Lcd_Write_String(string);
             }
 
-            //PocketQube - aceleraÁ„o
+            //PocketQube - acelera√ß√£o
             if (key_pressed == '7')
             {
                 ftoa(packet.acceleration, string, 0);
@@ -404,10 +478,11 @@ void keyboardTask()
                 Lcd_Write_String(string);
             }
 
-            //PocketQube - press„o
+            //PocketQube - press√£o
             if (key_pressed == '8')
             {
-                ftoa(packet.pressure, string, 0);;
+                ftoa(packet.pressure, string, 0);
+                ;
                 Lcd_Clear();
                 Lcd_Write_String("Pressao:");
                 Lcd_Write_String(string);
@@ -431,7 +506,28 @@ void keyboardTask()
                 Lcd_Write_String(string);
             }
 
-            //Data
+            //PocketQube - Pedir um pacote
+            if (key_pressed == '0')
+            {
+                //Pedir ao utilizador o n√∫mero do pacote
+                Lcd_Clear();
+                Lcd_Write_String("Nr pacote: *****");
+                Lcd_Set_Cursor(1, 12);
+                npacote[0] = key_reader();
+                npacote[1] = key_reader();
+                npacote[2] = key_reader();
+                npacote[3] = key_reader();
+                npacote[4] = key_reader();
+                npacote[5] = '\0';
+
+                //Convers√£o para float
+                npacket = atof(npacote);
+
+                //Vai procurar o pacote introduzido pelo utilizador
+                packetSearch(npacket);
+            }
+
+            //Data e Hora
             if (key_pressed == 'A')
             {
                 ftoa(date.mes, stringmes, 0);
@@ -440,7 +536,6 @@ void keyboardTask()
                 ftoa(date.hora, stringhora, 0);
                 ftoa(date.minuto, stringminuto, 0);
                 ftoa(date.segundo, stringsegundo, 0);
-
 
                 Lcd_Clear();
                 Lcd_Write_String(stringmes);
@@ -461,7 +556,6 @@ void keyboardTask()
             {
                 int two = 2;
                 xQueueSend(buzzer_queue, &two, 250);
-
             }
 
             //Clear
@@ -473,6 +567,10 @@ void keyboardTask()
     }
 }
 
+/*
+ * L√™ os valores do sensor de temperatura usando o protocolo I2C
+ * e envia para o keyboardTask
+*/
 void tempTask()
 {
     float temperature;
@@ -483,7 +581,7 @@ void tempTask()
 
     while (1)
     {
-        //leitura da temperatura
+        // Leitura da temperatura
         taskENTER_CRITICAL();
         temperature = I2CReceiveTemp(0b1001001);
         taskEXIT_CRITICAL();
@@ -494,25 +592,31 @@ void tempTask()
         // Envia dados para a fila
         xQueueSend(temp_queue, &temperature, portMAX_DELAY);
 
-        // Aguarda por algum tempo antes de enviar o prÛximo dado
+        // Aguarda por algum tempo antes de enviar o pr√≥ximo dado
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
+/*
+ * Produz um som do buzzer
+*/
 void buzzerTask()
 {
     int i, j;
     int n = 0;
     while (1)
     {
+        // Recebe da queue o n√∫mero de vezes que o buzzer vai tocar
         xQueueReceive(buzzer_queue, &n, portMAX_DELAY);
+
+        // Gera um sinal PWM
         for (j = 0; j < n; j++)
         {
             for (i = 0; i < 500; i++)
             {
-                GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_7, GPIO_PIN_7);
+                GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_7, GPIO_PIN_7); //High
                 vTaskDelay(pdMS_TO_TICKS(1) / 100);
-                GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_7, 0x0);
+                GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_7, 0x0); //Low
                 vTaskDelay(pdMS_TO_TICKS(1) / 100);
             }
             vTaskDelay(pdMS_TO_TICKS(100));
@@ -520,6 +624,9 @@ void buzzerTask()
     }
 }
 
+/*
+ * L√™ os dados enviados pelo sat√©lite para o PocketQube via UART
+*/
 void uartTask()
 {
     uint8_t i = 0;
@@ -530,31 +637,35 @@ void uartTask()
 
     while (1)
     {
-        if(xSemaphoreTake(uart_semaphore,portMAX_DELAY) == pdTRUE){
+        // Se o sem√°foto for desbloqueado
+        if (xSemaphoreTake(uart_semaphore,portMAX_DELAY) == pdTRUE)
+        {
+            // Percorre o pacote
             while (i < buffer_size - 1)
             {
-                //Aguarda ate que um caracter esteja disponivel para leitura
+                // Aguarda ate que um caracter esteja disponivel para leitura
                 while (!UARTCharsAvail(UART7_BASE))
                     vTaskDelay(pdMS_TO_TICKS(1));
 
                 // Le um caracter da porta UART
                 receivedChar = UARTCharGet(UART7_BASE);
 
-                // Verifica se e um caracter de terminaÁao
+                // Verifica se √© um caracter de inicia√ß√£o
                 if (receivedChar == 'P')
                 {
                     charP = 1;
                 }
 
-                // Verifica se e um caracter de terminaÁao
-                if (receivedChar == '\n' || receivedChar == '\r')
+                // Verifica se √© um caracter de termina√ßao
+                if ((receivedChar == '\n' || receivedChar == '\r')
+                        && charP == 1)
                 {
                     charP = 0;
                     // Adiciona o caracter nulo ao final da string
                     buffer[i] = '\0';
 
-                    //Faz o buffer circular se a fila de 20 pacotes estiver cheia ...
-                    //faz a receÁ„o de um deles que elimina da fila e escreve na fila o novo
+                    // Faz o buffer circular se a fila de 20 pacotes estiver cheia
+                    // faz a rece√ß√£o de um deles que elimina da fila e escreve na fila o novo
                     while (xQueueSend(uart_queue, &buffer, 100) != pdTRUE)
                     {
                         xQueueReceive(uart_queue, &buffer_trash, 100);
@@ -576,48 +687,43 @@ void uartTask()
 
 //*****************************************************************************
 //
-// Initialize FreeRTOS and start the initial set of tasks.
+// Fun√ß√£o principal
 //
 //*****************************************************************************
 int main(void)
 {
-    //melhorar///////////////////////////////////////////////////////////////////////
+    // Inicializa√ß√µes
     buzzer_init();
     Lcd_pin_Init();
     Lcd_Init();
-
     keyboard_init();
-
-
-    Lcd_Clear();
     date_init();
     timer_init();
     UART_init();
 
-
-    // Habilita as interrupÁıes globalmente
+    // Habilita as interrup√ß√µes globalmente
     IntMasterEnable();
 
+    // Mensagem inicial que aparece no LCD
     Lcd_Clear();
     Lcd_Write_String("Bem vindo!");
 
-    ////////////////////////////////////////////////////////////////////////////////////
     BaseType_t xkeyboardTask, xtempTask, xbuzzerTask, xuartTask;
 
-    // InicializaÁ„o da temp_queue
+    // Inicializa√ß√£o da temp_queue
     temp_queue = xQueueCreate(TEMP_QUEUE_LENGTH, ITEM_SIZE);
-    // InicializaÁ„o do buzzer_queue
+    // Inicializa√ß√£o do buzzer_queue
     buzzer_queue = xQueueCreate(BUZZER_QUEUE_LENGTH, ITEM_SIZE);
-    // InicializaÁ„o do uart_queue
+    // Inicializa√ß√£o do uart_queue
     uart_queue = xQueueCreate(UART_QUEUE_LENGTH, UART_SIZE);
 
-    // VerificaÁ„o temp_queue e buzzer_queue
+    // Verifica√ß√£o temp_queue e buzzer_queue
     if (temp_queue == NULL || buzzer_queue == NULL || uart_queue == NULL)
     {
         Lcd_Write_String("Erro na criacao da queue.");
     }
 
-    //InicializaÁ„o do semaforo
+    // Inicializa√ß√£o do semaforo
     uart_semaphore = xSemaphoreCreateBinary();
 
     if (uart_semaphore == NULL)
@@ -625,13 +731,13 @@ int main(void)
         Lcd_Write_String("Erro na criacao do semaforo.");
     }
 
-    // CriaÁ„o das tarefas
-    xkeyboardTask = xTaskCreate(keyboardTask, "Keyboard", 200, NULL, 1, NULL);
+    // Cria√ß√£o das tarefas
+    xkeyboardTask = xTaskCreate(keyboardTask, "Keyboard", 1000, NULL, 1, NULL);
     xtempTask = xTaskCreate(tempTask, "Temperature", 200, NULL, 1, NULL);
     xbuzzerTask = xTaskCreate(buzzerTask, "Buzzer", 200, NULL, 2, NULL);
     xuartTask = xTaskCreate(uartTask, "UART", 200, NULL, 3, NULL);
 
-    // VerficaÁ„o da criaÁ„o das tasks
+    // Verfica√ß√£o da cria√ß√£o das tasks
     if (xkeyboardTask != pdPASS || xtempTask != pdPASS || xbuzzerTask != pdPASS
             || xuartTask != pdPASS)
     {

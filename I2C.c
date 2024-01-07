@@ -1,6 +1,10 @@
 #include "I2C.h"
 
-void I2Cinit(){
+/*
+ * Configuração dos pins do I2C2
+*/
+void I2Cinit()
+{
     SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C2);
     while(!SysCtlPeripheralReady(SYSCTL_PERIPH_I2C2)){}
 
@@ -16,12 +20,17 @@ void I2Cinit(){
     I2CMasterInitExpClk(I2C2_BASE, SysCtlClockGet(), true);
 }
 
-void I2CSend(uint8_t slave_addr) {
+/*
+ * Funcao que envia o pedido de dados ao sensor de temperatura
+*/
+void I2CSend(uint8_t slave_addr)
+{
     // Escreve o endereço do slave no barramento
     I2CMasterSlaveAddrSet(I2C2_BASE, slave_addr, false);
 
     // Envia os bytes de dados
     I2CMasterDataPut(I2C2_BASE, 0x01);
+
     // Inicia a transferência
     I2CMasterControl(I2C2_BASE, I2C_MASTER_CMD_BURST_SEND_START);
     while(I2CMasterBusy(I2C2_BASE)){}
@@ -29,13 +38,13 @@ void I2CSend(uint8_t slave_addr) {
     I2CMasterDataPut(I2C2_BASE, 0x60);
     I2CMasterControl(I2C2_BASE, I2C_MASTER_CMD_BURST_SEND_CONT);
     while(I2CMasterBusy(I2C2_BASE)){}
-
-    // Aguarda a conclusão da transferência
-    //while (I2CMasterBusBusy(I2C2_BASE)) {}
 }
 
-float I2CReceiveTemp(uint8_t slave_addr) {
-
+/*
+ * Funcao que recebe os dados da temperatura medida
+*/
+float I2CReceiveTemp(uint8_t slave_addr)
+{
     uint16_t tempH,tempL;
     float cTemp;
 
@@ -56,18 +65,17 @@ float I2CReceiveTemp(uint8_t slave_addr) {
     while (I2CMasterBusy(I2C2_BASE)) {}
 
     tempL = I2CMasterDataGet(I2C2_BASE);
-    //temperature = temperature>>4;
 
     cTemp = conversao((tempH<<8) | tempL);
 
     return cTemp;
 }
 
+/*
+ * Funcao que converte os bits recebidos por I2C
+ * para a temperatura em graus
+*/
 float conversao(uint16_t temperature) {
     float cTemp = (temperature) / 256.0;
-    /*if(temp > 2047){
-      temp -= 4096;
-    }*/
-    //float cTemp = temp * 0.0625;
     return cTemp;
 }

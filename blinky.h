@@ -4,20 +4,14 @@
 #include <string.h>
 #include <stdbool.h>
 #include <math.h>
-
 #include "driverlib/gpio.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/pin_map.h"
 #include "driverlib/i2c.h"
 #include "driverlib/uart.h"
-
 #include "inc/hw_i2c.h"
 #include "inc/hw_memmap.h"
-
-//biblioteca retirada do exemplo do professor
 #include "LCD.h"
-
-//bibliotecas criadas por nós
 #include "keyboard.h"
 #include "lcd1.h"
 #include "buzzer.h"

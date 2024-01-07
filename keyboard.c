@@ -21,16 +21,13 @@ void keyboard_init()
 /*
  * Função que lê o teclado e retorna a letra que foi lida
  */
-
-/*
- * Alterar esta função para interrupções e só retorna a tecla lida, não o 'G'
- */
 char keyboard_reader()
 {
     int line, column;
 
-    char keys[4][4] = {         //Definicao da matriz com as teclas do teclado
-       {'1', '2', '3', 'F'},    //usada para verificar a tecla que foi pressionada
+    //Definicao da matriz com as teclas do teclado usada para verificar a tecla que foi pressionada
+    char keys[4][4] = {
+       {'1', '2', '3', 'F'},
        {'4', '5', '6', 'E'},
        {'7', '8', '9', 'D'},
        {'A', '0', 'B', 'C'}
