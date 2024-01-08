@@ -38,9 +38,9 @@ blinky.obj: ../lcd1.h
 blinky.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdio.h
 blinky.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h
 blinky.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/string.h
+blinky.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h
 blinky.obj: ../LCD.h
 blinky.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h
-blinky.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h
 blinky.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h
 blinky.obj: ../buzzer.h
 blinky.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdio.h
@@ -54,9 +54,9 @@ blinky.obj: ../I2C.h
 blinky.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdio.h
 blinky.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h
 blinky.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/string.h
+blinky.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h
 blinky.obj: ../LCD.h
 blinky.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h
-blinky.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h
 blinky.obj: C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h
 
 ../blinky.c:
@@ -135,11 +135,11 @@ C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h:
 
 C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/string.h:
 
+C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h:
+
 ../LCD.h:
 
 C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h:
-
-C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h:
 
 C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h:
 
@@ -167,11 +167,11 @@ C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h:
 
 C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/string.h:
 
+C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h:
+
 ../LCD.h:
 
 C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/stdlib.h:
-
-C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h:
 
 C:/ti/ccs1250/ccs/tools/compiler/ti-cgt-arm_5.2.6/include/math.h:
 

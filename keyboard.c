@@ -41,10 +41,12 @@ char keyboard_reader()
         for(line=0; line<4; line++){                                //Ciclo que passa pelos 4 inputs [X]
             if (GPIOPinRead(GPIO_PORTC_BASE, x[line]) == x[line]) { //Se o pino de input [X] estiver a high a tecla foi pressionada
                 GPIOPinWrite(GPIO_PORTB_BASE, y[column], 0);        //Desativa o pino de output
+                SysCtlDelay(30000);
                 return keys[column][line];                          //Retorna a tecla pressionada
             }
         }
         GPIOPinWrite(GPIO_PORTB_BASE, y[column], 0);                //Desativa o pino de output
     }
+    SysCtlDelay(30000);
     return 'G';
 }
